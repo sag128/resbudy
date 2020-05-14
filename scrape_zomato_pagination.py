@@ -1985,7 +1985,16 @@ for ii in left_join['index']:
         
 
 
-
+for ii in left_join['index']:
+    
+    if not str(left_join['cost for 2'].loc[ii]).isdigit():
+        
+        
+    
+        left_join['cost for 2'].loc[ii] = str(re.sub("[^0-9]","",left_join['cost for 2'].loc[ii]))
+    
+    
+    
 
 
 
