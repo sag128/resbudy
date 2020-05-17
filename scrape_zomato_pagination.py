@@ -24,8 +24,23 @@ import numpy as np
 
 
 ap = argparse.ArgumentParser()
-ap.add_argument("-ci", "--city", type=str, default="ajmer", nargs='+',
+ap.add_argument("-ci", "--city", type=str, default="ahmedabad", nargs='+',
     help="city name eg. Ahmedabad (required)")
+
+ap.add_argument("-rev", "--reviews", type=str, default="100",
+    help="minumum reviews  eg. 100 default:100")
+
+
+ap.add_argument("-rat", "--ratings", type=str, default="",
+    help="minumum rating  eg. 3  default:None")
+
+
+ap.add_argument("-rat_max", "--ratingsmax", type=str, default="",
+    help="maximum rating  eg. 3  default:None")
+
+
+ap.add_argument("-cui", "--cuisines", type=str, default="",nargs='+',
+    help="particular cuisines  eg. Fast food default:None")
 args = vars(ap.parse_args())
 
 class Dictlist(dict):
@@ -46,6 +61,9 @@ class Dictlist(dict):
 
 
 d=Dictlist()
+inp_rev = str(args['reviews'])
+inp_rat = str(args['ratings'])
+inp_rat_max = str(args['ratingsmax'])
 test= Dictlist()
 panda_dict = Dictlist()
 panda_dict1 = Dictlist()
@@ -1295,7 +1313,7 @@ def fetch_less_than_2(start,stop,unique_list):
                 
         except :
             
-            
+            test['fav'] = ''
             print("dsfsdgfsg")
             
             
@@ -2057,24 +2075,41 @@ for i in left_join.columns:
 
       
 
+query_lat_lon = left_join.query('lat == "0.0" | lat == "nan" | lon == "0.0" | lat == " " | lon == " "  | lon=="nan"')
 
-query = left_join.query('ratings=="-" | reviews=="" | ratings=="NEW" | reviews=="nan" | ratings=="Opening" | ratings=="Closed" | ratings=="Soon" | ratings=="Temporarily" | lat == "0.0" | lat == "nan" | lon == "0.0" | lat == " " | lon == " " ')
+left_join=left_join.drop(query_lat_lon.index)
+
+left_join['lat'] = left_join['lat'].astype(str).astype(float)
+left_join['lon'] = left_join['lon'].astype(str).astype(float)
+
+query = left_join.query('ratings=="" | ratings=="-" | reviews=="" | ratings=="NEW" | reviews=="nan" | ratings=="Opening" | ratings=="Closed" | ratings=="Soon" | ratings=="Temporarily"  | lat >= 90 | lat <= -90 | `cost for 2` == "" |fav=="nan" ')
 
 
 
 left_join=left_join.drop(query.index)
 
 left_join['reviews'] = left_join['reviews'].astype(str).astype(int)
-
+left_join['ratings'] = left_join['ratings'].astype(str).astype(float)
 
 print(left_join.dtypes)
 
-query2 = left_join.query('reviews < 100')
+if len(inp_rev) > 0:
+    
+    query2 = left_join.query('reviews < '+inp_rev)
+    left_join=left_join.drop(query2.index)
+if len(inp_rat) > 0:
+    
+    query3 = left_join.query('ratings < '+inp_rat)
+    left_join=left_join.drop(query3.index)
+    
+if len(inp_rat_max) > 0:
+    
+    query3 = left_join.query('ratings > '+inp_rat_max)
+    left_join=left_join.drop(query3.index)
 
-left_join=left_join.drop(query2.index)
 
 
-print(left_join)
+#print(left_join)
 
 left_join = left_join.sort_values(by = ['ratings'],ascending = True)
 
@@ -2090,9 +2125,22 @@ for io in left_join.index:
 
 left_join=left_join.drop(query_ind)
 
+
+cuisine_del=[]
+inp_cui_str=str(' '.join(args['cuisines'])).title()
+
+#inp_cui_str = list(str(','.join(inp_cui)).title())
+#print(str(inp_cui_str)+"")
+for c in left_join['index']:
+    if not inp_cui_str in left_join['cuisines'][c]:
+        
+        cuisine_del.append(left_join['index'][c])
+    
+left_join = left_join.drop(cuisine_del)
+
 left_join.to_csv('test111.csv' , mode = 'w+')
 #print(left_join[(left_join.reviews == 569)])
 
-suggest('test111.csv',city_name)
+suggest('test111.csv',city_name=city_name)
 
 print("--- %s seconds ---" % (time.time() - start_time))
