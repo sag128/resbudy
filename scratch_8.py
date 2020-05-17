@@ -14,7 +14,7 @@ def fig(fname):
     # carshare = px.data.carshare()
     fig = px.scatter_mapbox(data,hover_name='name' , lat='lat', lon='lon',
                             color_continuous_scale=px.colors.cyclical.IceFire,size='reviews', size_max=100,
-                            zoom=11,height=1000,width=1920,color="reviews")
+                            zoom=11,height=1000,width=1920,color="ratings")
     fig.show()
 
 def fig2(fname):
@@ -28,7 +28,7 @@ def fig2(fname):
     # carshare = px.data.carshare()
     fig2 = px.scatter_mapbox(data,hover_name='Unnamed: 0', lat='lat', lon='lon',
                             color_continuous_scale=px.colors.cyclical.mrybm,size='size' ,color='rating',
-                            zoom=11,height=1000,width=1920)
+                            zoom=11,height=1000,width=1920,size_max=100,text="reviews")
     fig2.show()
     
 
