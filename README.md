@@ -9,11 +9,17 @@ run : pip install -r requirments.txt to satisfy dependencies
 run : python or python3 (linux) scrape_zomato_pagination.py -h for help text
 
 -h : Help
+
 -ci : City name eg: mumbai eg: python scrape_zomato_pagination.py -ci mumbai
+
 -rat: minimum rating eg 3
+
 -rat_max : for maximum ratings eg 4
+
 -rev : for minuimum reviews
+
 -cui: for cuisines eg: fast food, you can give multiple cuisine names seperated by a comma (,) eg: fast food, pizza, north indian
+
 
 The end result would be 2 maps in the browser
 
