@@ -17,7 +17,7 @@ import timeit
 start_time = time.time()
 import os
 import re
-#from _thread import start_new_thread
+from _thread import start_new_thread
 from concurrent.futures import ThreadPoolExecutor
 from pincode import suggest
 import numpy as np
