@@ -719,101 +719,103 @@ def more_than_2(start,stop):
     
     
     for jo in range(start,stop):
-            url2 = url_more_than_2[jo]
-            agent2 = {"User-Agent":'Chrome/77.0.3865.90'}
-            page2 = requests.get(url2, headers=agent2)
-            soup2=BeautifulSoup(page2.content, 'lxml')
+        url2 = url_more_than_2[jo]
+        agent2 = {"User-Agent":'Chrome/77.0.3865.90'}
+        page2 = requests.get(url2, headers=agent2)
+        soup2=BeautifulSoup(page2.content, 'lxml')
             
-            page3=soup2.find_all("div",{'class':'col-l-4 mtop pagination-number'})
+        page3=soup2.find_all("div",{'class':'col-l-4 mtop pagination-number'})
             
-            pg=int(str(list(page3[0])).split("<b>")[-1].split("<")[0])
+        pg=int(str(list(page3[0])).split("<b>")[-1].split("<")[0])
             
-            for io in range(1,pg+1):
-                url3 = url2+ '&page='+str(io)
-                agent3 = {"User-Agent":'Chrome/77.0.3865.90'}
-                page33 = requests.get(url3, headers=agent3)
-                soup33=BeautifulSoup(page33.content, 'lxml')
+        for io in range(1,pg+1):
+            
+            url3 = url2+ '&page='+str(io)
+            agent3 = {"User-Agent":'Chrome/77.0.3865.90'}
+            page33 = requests.get(url3, headers=agent3)
+            soup33=BeautifulSoup(page33.content, 'lxml')
                 
-                length=soup33.find_all("a",{'class':'result-title hover_feedback zred bold ln24 fontsize0'})
+            lengtha=soup33.find_all("a",{'class':'result-title hover_feedback zred bold ln24 fontsize0'})
                 
-                for tt in range(len(length)):
+            for tt in range(len(lengtha)):
                     
-                    url_less_than_2.append(length[tt]['href'])
+                url_less_than_2.append(lengtha[tt]['href'])
+                print(lengtha[tt]['href'])
     
 
 
 
        
                 
-def zomato_child(url_param,start,stop):
+# def zomato_child(url_param,start,stop):
     
         
-    for j in range(start,stop):
+#     for j in range(start,stop):
 
-        url3 = url_param+ '&page='+str(j)
-        agent3 = {"User-Agent":'Chrome/77.0.3865.90'}
-        page33 = requests.get(url3, headers=agent3)
-        soup33=BeautifulSoup(page33.content, 'lxml')
+#         url3 = url_param+ '&page='+str(j)
+#         agent3 = {"User-Agent":'Chrome/77.0.3865.90'}
+#         page33 = requests.get(url3, headers=agent3)
+#         soup33=BeautifulSoup(page33.content, 'lxml')
         
-        length=soup33.find_all("a",{'class':'result-title hover_feedback zred bold ln24 fontsize0'})
-        soup2=soup33.find_all("a",{'class':'result-title hover_feedback zred bold ln24 fontsize0'})
+#         length=soup33.find_all("a",{'class':'result-title hover_feedback zred bold ln24 fontsize0'})
+#         soup2=soup33.find_all("a",{'class':'result-title hover_feedback zred bold ln24 fontsize0'})
         
-        ratings = soup33.find_all("div",{"class":"ta-right floating search_result_rating col-s-4 clearfix"})
-        cost_for_2 = soup33.find_all("span",{"class":"col-s-11 col-m-12 pl0"})
+#         ratings = soup33.find_all("div",{"class":"ta-right floating search_result_rating col-s-4 clearfix"})
+#         cost_for_2 = soup33.find_all("span",{"class":"col-s-11 col-m-12 pl0"})
         
         
-        cuisines = soup33.find_all("span",{"class":"col-s-11 col-m-12 nowrap pl0"})
-        address = soup33.find_all("div",{"class":"col-m-16 search-result-address grey-text nowrap ln22"})
-        #lat =soup.find("meta",{"property" : "place:location:latitude"})
-        #lon =soup.find("meta",{"property" : "place:location:longitude"})
-        #print(lat['content'])
-        #print(lon['content'])
+#         cuisines = soup33.find_all("span",{"class":"col-s-11 col-m-12 nowrap pl0"})
+#         address = soup33.find_all("div",{"class":"col-m-16 search-result-address grey-text nowrap ln22"})
+#         #lat =soup.find("meta",{"property" : "place:location:latitude"})
+#         #lon =soup.find("meta",{"property" : "place:location:longitude"})
+#         #print(lat['content'])
+#         #print(lon['content'])
         
         
             
-        for tt in range(len(length)):
-            final_url.append(length[tt]['href'])
+#         for tt in range(len(length)):
+#             final_url.append(length[tt]['href'])
 
-            #if  list(ratings[tt].getText().split())[0] != "NEW":
+#             #if  list(ratings[tt].getText().split())[0] != "NEW":
                 
-             #   print(list(ratings[tt].getText().split())[0])
+#              #   print(list(ratings[tt].getText().split())[0])
             
 
-            d['name'] = soup2[tt]['title']
-            d['link'] = soup2[tt]['href']
+#             d['name'] = soup2[tt]['title']
+#             d['link'] = soup2[tt]['href']
                 
-            try:
+#             try:
 
-                d['cost for 2'] = cost_for_2[tt].getText()[1:]
-            except :
+#                 d['cost for 2'] = cost_for_2[tt].getText()[1:]
+#             except :
                 
 
-                d['cost for 2'] = ""
+#                 d['cost for 2'] = ""
 
-            try:
+#             try:
 
-                d['cuisines'] = cuisines[tt].getText()
-            except:
-                d['cuisines'] = ""
+#                 d['cuisines'] = cuisines[tt].getText()
+#             except:
+#                 d['cuisines'] = ""
 
-            try:
+#             try:
 
-                d['ratings'] = (list(ratings[tt].getText().split())[0])
-            except:
+#                 d['ratings'] = (list(ratings[tt].getText().split())[0])
+#             except:
 
-                d['ratings'] = ""
-            try:
-                d['reviews'] = (list(ratings[tt].getText().split())[1])
-            except:
-                d['reviews'] = ""
+#                 d['ratings'] = ""
+#             try:
+#                 d['reviews'] = (list(ratings[tt].getText().split())[1])
+#             except:
+#                 d['reviews'] = ""
 
 
 
-            try:
+#             try:
 
-                d['address'] = address[tt].getText()
-            except:
-                d['address'] = ""
+#                 d['address'] = address[tt].getText()
+#             except:
+#                 d['address'] = ""
 
     
     
@@ -858,21 +860,11 @@ def zomato_child(url_param,start,stop):
  #   t111.join()
 
 
-
-
-
-
-
-
-                
-
-
-
-
-
 def lat_lon(start,stop):
+    
 
     for l in range(start,stop):
+        
 
         url = d['link'][l]
         agent = {"User-Agent":'Chrome/77.0.3865.90'}
@@ -880,6 +872,7 @@ def lat_lon(start,stop):
         soup_loop=BeautifulSoup(page.content, 'lxml')
         
         try:
+            
             cost_all=soup_loop.find_all("h5")
             if  'Top Dishes' in str(cost_all) and 'Average' in str(cost_all):
         
@@ -956,6 +949,7 @@ def lat_lon(start,stop):
 
 
 
+
         
 if os.path.exists(city_name+'.csv') == True:
         print("from here")
@@ -976,6 +970,9 @@ if os.path.exists(city_name+'.csv') == True:
 
 
 else:
+    
+    
+    
     
     
     
@@ -1084,132 +1081,18 @@ else:
     threads1.append(t25)
     t25.start()
     
-    url_more_than_2 = list(set(url_more_than_2))
-    length_more = len(url_more_than_2)
+    
+    
     
         
-    threads_more=list()
-    x = threading.Thread(target=more_than_2, args=(0,length_more//26))
-    threads_more.append(x)
-    x.start()
-    
-    x2 = threading.Thread(target=more_than_2, args=(length_more//26,(length_more//26)*2))
-    threads_more.append(x2)
-    x2.start()
-    
-    x3 = threading.Thread(target=more_than_2, args=((length_more//26)*2,(length_more//26)*3))
-    threads_more.append(x3)
-    x3.start()
-    
-    x4 = threading.Thread(target=more_than_2, args=((length_more//26)*3,(length_more//26)*4))
-    threads_more.append(x4)
-    x4.start()
-    
-    x5 = threading.Thread(target=more_than_2, args=((length_more//26)*4,(length_more//26)*5))
-    threads_more.append(x5)
-    x5.start()
-    
-    
-    x6 = threading.Thread(target=more_than_2, args=((length_more//26)*5,(length_more//26)*6))
-    threads_more.append(x6)
-    x6.start()
-    
-    x7 = threading.Thread(target=more_than_2, args=((length_more//26)*6,(length_more//26)*7))
-    threads_more.append(x7)
-    x7.start()
-    
-    x8 = threading.Thread(target=more_than_2, args=((length_more//26)*7,(length_more//26)*8))
-    threads_more.append(x8)
-    x8.start()
-    
-    x9 = threading.Thread(target=more_than_2, args=((length_more//26)*8,(length_more//26)*9))
-    threads_more.append(x9)
-    x9.start()
-    
-    x10 = threading.Thread(target=more_than_2, args=((length_more//26)*9,(length_more//26)*10))
-    threads_more.append(x10)
-    x10.start()
-    
-    
-    x11 = threading.Thread(target=more_than_2, args=((length_more//26)*10,(length_more//26)*11))
-    threads_more.append(x11)
-    x11.start()
-    
-    x12 = threading.Thread(target=more_than_2, args=((length_more//26)*11,(length_more//26)*12))
-    threads_more.append(x12)
-    x12.start()
-    
-    x13 = threading.Thread(target=more_than_2, args=((length_more//26)*12,(length_more//26)*13))
-    threads_more.append(x13)
-    x13.start()
-    
-    x14 = threading.Thread(target=more_than_2, args=((length_more//26)*13,(length_more//26)*14))
-    threads_more.append(x14)
-    x14.start()
-    
-    x15 = threading.Thread(target=more_than_2, args=((length_more//26)*14,(length_more//26)*15))
-    threads_more.append(x15)
-    x15.start()
-    
-    
-    x16 = threading.Thread(target=more_than_2, args=((length_more//26)*15,(length_more//26)*16))
-    threads_more.append(x16)
-    x16.start()
-    
-    x17a = threading.Thread(target=more_than_2, args=((length_more//26)*16,(length_more//26)*17))
-    threads_more.append(x17a)
-    x17a.start()
-    
-    x17 = threading.Thread(target=more_than_2, args=((length_more//26)*17,(length_more//26)*18))
-    threads_more.append(x17)
-    x17.start()
-    
-    x18 = threading.Thread(target=more_than_2, args=((length_more//26)*18,(length_more//26)*19))
-    threads_more.append(x18)
-    x18.start()
-    
-    x19 = threading.Thread(target=more_than_2, args=((length_more//26)*19,(length_more//26)*20))
-    threads_more.append(x19)
-    x19.start()
-    
-    
-    x20 = threading.Thread(target=more_than_2, args=((length_more//26)*20,(length_more//26)*21))
-    threads_more.append(x20)
-    x20.start()
-    
-    
-    x21 = threading.Thread(target=more_than_2, args=((length_more//26)*21,(length_more//26)*22))
-    threads_more.append(x21)
-    x21.start()
-    
-    x22 = threading.Thread(target=more_than_2, args=((length_more//26)*22,(length_more//26)*23))
-    threads_more.append(x22)
-    x22.start()
-    
-    x23 = threading.Thread(target=more_than_2, args=((length_more//26)*23,(length_more//26)*24))
-    threads_more.append(x23)
-    x23.start()
-    
-    x24 = threading.Thread(target=more_than_2, args=((length_more//26)*24,(length_more//26)*25))
-    threads_more.append(x24)
-    x24.start()
-    
-    x25 = threading.Thread(target=more_than_2, args=((length_more//26)*25,(length_more//26)*26))
-    threads_more.append(x25)
-    x25.start()
-    
-    
-    x26 = threading.Thread(target=more_than_2, args=((length_more//26)*26,length_more))
-    threads_more.append(x26)
-    x26.start()
     
     
 
 
 
-    # t20 = threading.Thread(target=zomato, args=((aa//26)*20,aa+1,city_name))
-    # threads1.append(t20)
-    # t20.start()
+    # # t20 = threading.Thread(target=zomato, args=((aa//26)*20,aa+1,city_name))
+    # # threads1.append(t20)
+    # # t20.start()
 
 
     
@@ -1243,33 +1126,170 @@ else:
     
     
     
-    x.join()
-    x2.join()
-    x3.join()
-    x4.join()
-    x5.join()
-    x6.join()
-    x7.join()
-    x8.join()
-    x9.join()
-    x10.join()
-    x11.join()
-    x12.join()
-    x13.join()
-    x14.join()
-    x15.join()
-    x16.join()
-    x17.join()
-    x17a.join()
-    x18.join()
-    x19.join()
-    x20.join()
-    x21.join()
-    x22.join()
-    x23.join()
-    x24.join()
-    x25.join()
-    x26.join()
+    
+    
+if os.path.exists(city_name+'.csv') == True:
+        print("from here")
+        retrieve = pd.read_csv(city_name+'.csv')
+        for l in range(len(retrieve['ratings'])):
+            panda_dict['link'] = str(retrieve['link'][l])
+            panda_dict['ratings'] = str(retrieve['ratings'][l])
+            panda_dict['reviews'] = str(retrieve['reviews'][l])
+            panda_dict['name'] = str(retrieve['name'][l])
+            panda_dict['address'] = str(retrieve['address'][l]).strip()
+            panda_dict['cost for 2'] = str(retrieve['cost for 2'][l])
+            # panda_dict['lat'] = str(retrieve['lat'][l])
+            # panda_dict['lon'] = str(retrieve['lon'][l])
+            panda_dict['cuisines'] = str(retrieve['cuisines'][l])
+            
+            
+        test_df_list = pd.DataFrame(panda_dict)
+else:
+    print('more than two else')
+    length_more = len(url_more_than_2)
+    threads_more=list()
+    xb = threading.Thread(target=more_than_2, args=(0,length_more//26))
+    threads_more.append(xb)
+    xb.start()
+    
+    x2b = threading.Thread(target=more_than_2, args=(length_more//26,(length_more//26)*2))
+    threads_more.append(x2b)
+    x2b.start()
+    
+    x3b = threading.Thread(target=more_than_2, args=((length_more//26)*2,(length_more//26)*3))
+    threads_more.append(x3b)
+    x3b.start()
+    
+    x4b = threading.Thread(target=more_than_2, args=((length_more//26)*3,(length_more//26)*4))
+    threads_more.append(x4b)
+    x4b.start()
+    
+    x5b = threading.Thread(target=more_than_2, args=((length_more//26)*4,(length_more//26)*5))
+    threads_more.append(x5b)
+    x5b.start()
+    
+    
+    x6b = threading.Thread(target=more_than_2, args=((length_more//26)*5,(length_more//26)*6))
+    threads_more.append(x6b)
+    x6b.start()
+    
+    x7b = threading.Thread(target=more_than_2, args=((length_more//26)*6,(length_more//26)*7))
+    threads_more.append(x7b)
+    x7b.start()
+    
+    x8b= threading.Thread(target=more_than_2, args=((length_more//26)*7,(length_more//26)*8))
+    threads_more.append(x8b)
+    x8b.start()
+    
+    x9b = threading.Thread(target=more_than_2, args=((length_more//26)*8,(length_more//26)*9))
+    threads_more.append(x9b)
+    x9b.start()
+    
+    x10b = threading.Thread(target=more_than_2, args=((length_more//26)*9,(length_more//26)*10))
+    threads_more.append(x10b)
+    x10b.start()
+    
+    
+    x11b = threading.Thread(target=more_than_2, args=((length_more//26)*10,(length_more//26)*11))
+    threads_more.append(x11b)
+    x11b.start()
+    
+    x12b = threading.Thread(target=more_than_2, args=((length_more//26)*11,(length_more//26)*12))
+    threads_more.append(x12b)
+    x12b.start()
+    
+    x13b = threading.Thread(target=more_than_2, args=((length_more//26)*12,(length_more//26)*13))
+    threads_more.append(x13b)
+    x13b.start()
+    
+    x14b = threading.Thread(target=more_than_2, args=((length_more//26)*13,(length_more//26)*14))
+    threads_more.append(x14b)
+    x14b.start()
+    
+    x15b = threading.Thread(target=more_than_2, args=((length_more//26)*14,(length_more//26)*15))
+    threads_more.append(x15b)
+    x15b.start()
+    
+    
+    x16b = threading.Thread(target=more_than_2, args=((length_more//26)*15,(length_more//26)*16))
+    threads_more.append(x16b)
+    x16b.start()
+    
+    x17ab = threading.Thread(target=more_than_2, args=((length_more//26)*16,(length_more//26)*17))
+    threads_more.append(x17ab)
+    x17ab.start()
+    
+    x17b = threading.Thread(target=more_than_2, args=((length_more//26)*17,(length_more//26)*18))
+    threads_more.append(x17b)
+    x17b.start()
+    
+    x18b = threading.Thread(target=more_than_2, args=((length_more//26)*18,(length_more//26)*19))
+    threads_more.append(x18b)
+    x18b.start()
+    
+    x19b = threading.Thread(target=more_than_2, args=((length_more//26)*19,(length_more//26)*20))
+    threads_more.append(x19b)
+    x19b.start()
+    
+    
+    x20b = threading.Thread(target=more_than_2, args=((length_more//26)*20,(length_more//26)*21))
+    threads_more.append(x20b)
+    x20b.start()
+    
+    
+    x21b = threading.Thread(target=more_than_2, args=((length_more//26)*21,(length_more//26)*22))
+    threads_more.append(x21b)
+    x21b.start()
+    
+    x22b = threading.Thread(target=more_than_2, args=((length_more//26)*22,(length_more//26)*23))
+    threads_more.append(x22b)
+    x22b.start()
+    
+    x23b = threading.Thread(target=more_than_2, args=((length_more//26)*23,(length_more//26)*24))
+    threads_more.append(x23b)
+    x23b.start()
+    
+    x24b = threading.Thread(target=more_than_2, args=((length_more//26)*24,(length_more//26)*25))
+    threads_more.append(x24b)
+    x24b.start()
+    
+    x25b = threading.Thread(target=more_than_2, args=((length_more//26)*25,(length_more//26)*26))
+    threads_more.append(x25b)
+    x25b.start()
+    
+    
+    x26b = threading.Thread(target=more_than_2, args=((length_more//26)*26,length_more))
+    threads_more.append(x26b)
+    x26b.start()
+    
+    
+    xb.join()
+    x2b.join()
+    x3b.join()
+    x4b.join()
+    x5b.join()
+    x6b.join()
+    x7b.join()
+    x8b.join()
+    x9b.join()
+    x10b.join()
+    x11b.join()
+    x12b.join()
+    x13b.join()
+    x14b.join()
+    x15b.join()
+    x16b.join()
+    x17b.join()
+    x17ab.join()
+    x18b.join()
+    x19b.join()
+    x20b.join()
+    x21b.join()
+    x22b.join()
+    x23b.join()
+    x24b.join()
+    x25b.join()
+    x26b.join()
     
     
     
@@ -1278,9 +1298,8 @@ else:
     
 def fetch_less_than_2(start,stop,unique_list):
     
+    
     for u in range(start,stop):
-        
-        
     
         temp_str=[]
         
@@ -1511,6 +1530,10 @@ def fetch_less_than_2(start,stop,unique_list):
             test['lat']= ''
             test['lon']  = ''
     
+
+
+
+
         
     #for n in range(len(branch_dict)):
         
@@ -1590,13 +1613,13 @@ if os.path.exists(city_name+'lat_lon'+'.csv') == True:
 
 else:
     
-    url_less_than_2 = list(set(url_less_than_2))    
+    
     
     length_ = len(url_less_than_2)
-
+    
 
     open_again = final_url
-    res_len=len(open_again)
+    res_len = len(d['link'])
     
 
     threads=list()
@@ -1831,110 +1854,110 @@ else:
     x26_.start()
 
 
-    # x27 = threading.Thread(target=zomato, args=((aa//50)*27,(aa//50)*28,city_name))
-    # threads.append(x27)
-    # x27.start()
+    # # x27 = threading.Thread(target=zomato, args=((aa//50)*27,(aa//50)*28,city_name))
+    # # threads.append(x27)
+    # # x27.start()
 
-    # x28 = threading.Thread(target=zomato, args=((aa//50)*28,(aa//50)*29,city_name))
-    # threads.append(x28)
-    # x28.start()
+    # # x28 = threading.Thread(target=zomato, args=((aa//50)*28,(aa//50)*29,city_name))
+    # # threads.append(x28)
+    # # x28.start()
 
-    # x29 = threading.Thread(target=zomato, args=((aa//50)*29,(aa//50)*30,city_name))
-    # threads.append(x29)
-    # x29.start()
+    # # x29 = threading.Thread(target=zomato, args=((aa//50)*29,(aa//50)*30,city_name))
+    # # threads.append(x29)
+    # # x29.start()
 
-    # x30 = threading.Thread(target=zomato, args=((aa//50)*30,(aa//50)*31,city_name))
-    # threads.append(x30)
-    # x30.start()
-
-
-    # x31 = threading.Thread(target=zomato, args=((aa//50)*31,(aa//50)*32,city_name))
-    # threads.append(x31)
-    # x31.start()
-
-    # x32 = threading.Thread(target=zomato, args=((aa//50)*32,(aa//50)*33,city_name))
-    # threads.append(x32)
-    # x32.start()
-
-    # x33 = threading.Thread(target=zomato, args=((aa//50)*33,(aa//50)*34,city_name))
-    # threads.append(x33)
-    # x33.start()
-
-    # x34 = threading.Thread(target=zomato, args=((aa//50)*34,(aa//50)*35,city_name))
-    # threads.append(x34)
-    # x34.start()
-
-    # x35 = threading.Thread(target=zomato, args=((aa//50)*35,(aa//50)*36,city_name))
-    # threads.append(x35)
-    # x35.start()
+    # # x30 = threading.Thread(target=zomato, args=((aa//50)*30,(aa//50)*31,city_name))
+    # # threads.append(x30)
+    # # x30.start()
 
 
-    # x36 = threading.Thread(target=zomato, args=((aa//50)*36,(aa//50)*37,city_name))
-    # threads.append(x36)
-    # x36.start()
+    # # x31 = threading.Thread(target=zomato, args=((aa//50)*31,(aa//50)*32,city_name))
+    # # threads.append(x31)
+    # # x31.start()
+
+    # # x32 = threading.Thread(target=zomato, args=((aa//50)*32,(aa//50)*33,city_name))
+    # # threads.append(x32)
+    # # x32.start()
+
+    # # x33 = threading.Thread(target=zomato, args=((aa//50)*33,(aa//50)*34,city_name))
+    # # threads.append(x33)
+    # # x33.start()
+
+    # # x34 = threading.Thread(target=zomato, args=((aa//50)*34,(aa//50)*35,city_name))
+    # # threads.append(x34)
+    # # x34.start()
+
+    # # x35 = threading.Thread(target=zomato, args=((aa//50)*35,(aa//50)*36,city_name))
+    # # threads.append(x35)
+    # # x35.start()
 
 
-
-    # x37 = threading.Thread(target=zomato, args=((aa//50)*37,(aa//50)*38,city_name))
-    # threads.append(x37)
-    # x37.start()
-
-    # x38 = threading.Thread(target=zomato, args=((aa//50)*39,(aa//50)*39,city_name))
-    # threads.append(x38)
-    # x38.start()
-
-    # x39 = threading.Thread(target=zomato, args=((aa//50)*39,(aa//50)*40,city_name))
-    # threads.append(x39)
-    # x39.start()
-
-
-    # x40 = threading.Thread(target=zomato,  args=((aa//50)*40,(aa//50)*41,city_name))
-    # threads.append(x40)
-    # x40.start()
-
-    # x41 = threading.Thread(target=zomato, args=((aa//50)*41,(aa//50)*42,city_name))
-    # threads.append(x41)
-    # x41.start()
-
-    # x42 = threading.Thread(target=zomato, args=((aa//50)*42,(aa//50)*43,city_name))
-    # threads.append(x42)
-    # x42.start()
-
-    # x43 = threading.Thread(target=zomato, args=((aa//50)*43,(aa//50)*44,city_name))
-    # threads.append(x43)
-    # x43.start()
-
-    # x44 = threading.Thread(target=zomato, args=((aa//50)*44,(aa//50)*45,city_name))
-    # threads.append(x44)
-    # x44.start()
-
-    # x45 = threading.Thread(target=zomato, args=((aa//50)*45,(aa//50)*46,city_name))
-    # threads.append(x45)
-    # x45.start()
-
-
-    # x46 = threading.Thread(target=zomato, args=((aa//50)*46,(aa//50)*47,city_name))
-    # threads.append(x46)
-    # x46.start()
+    # # x36 = threading.Thread(target=zomato, args=((aa//50)*36,(aa//50)*37,city_name))
+    # # threads.append(x36)
+    # # x36.start()
 
 
 
-    # x47 = threading.Thread(target=zomato, args=((aa//50)*47,(aa//50)*48,city_name))
-    # threads.append(x47)
-    # x47.start()
+    # # x37 = threading.Thread(target=zomato, args=((aa//50)*37,(aa//50)*38,city_name))
+    # # threads.append(x37)
+    # # x37.start()
 
-    # x48 = threading.Thread(target=zomato, args=((aa//50)*48,(aa//50)*49,city_name))
-    # threads.append(x48)
-    # x48.start()
+    # # x38 = threading.Thread(target=zomato, args=((aa//50)*39,(aa//50)*39,city_name))
+    # # threads.append(x38)
+    # # x38.start()
 
-    # x49 = threading.Thread(target=zomato, args=((aa//50)*49,(aa//50)*50,city_name))
-    # threads.append(x49)
-    # x49.start()
+    # # x39 = threading.Thread(target=zomato, args=((aa//50)*39,(aa//50)*40,city_name))
+    # # threads.append(x39)
+    # # x39.start()
 
 
-    # x50 = threading.Thread(target=zomato, args=((aa//50)*50,aa+1,city_name))
-    # threads.append(x50)
-    # x50.start()
+    # # x40 = threading.Thread(target=zomato,  args=((aa//50)*40,(aa//50)*41,city_name))
+    # # threads.append(x40)
+    # # x40.start()
+
+    # # x41 = threading.Thread(target=zomato, args=((aa//50)*41,(aa//50)*42,city_name))
+    # # threads.append(x41)
+    # # x41.start()
+
+    # # x42 = threading.Thread(target=zomato, args=((aa//50)*42,(aa//50)*43,city_name))
+    # # threads.append(x42)
+    # # x42.start()
+
+    # # x43 = threading.Thread(target=zomato, args=((aa//50)*43,(aa//50)*44,city_name))
+    # # threads.append(x43)
+    # # x43.start()
+
+    # # x44 = threading.Thread(target=zomato, args=((aa//50)*44,(aa//50)*45,city_name))
+    # # threads.append(x44)
+    # # x44.start()
+
+    # # x45 = threading.Thread(target=zomato, args=((aa//50)*45,(aa//50)*46,city_name))
+    # # threads.append(x45)
+    # # x45.start()
+
+
+    # # x46 = threading.Thread(target=zomato, args=((aa//50)*46,(aa//50)*47,city_name))
+    # # threads.append(x46)
+    # # x46.start()
+
+
+
+    # # x47 = threading.Thread(target=zomato, args=((aa//50)*47,(aa//50)*48,city_name))
+    # # threads.append(x47)
+    # # x47.start()
+
+    # # x48 = threading.Thread(target=zomato, args=((aa//50)*48,(aa//50)*49,city_name))
+    # # threads.append(x48)
+    # # x48.start()
+
+    # # x49 = threading.Thread(target=zomato, args=((aa//50)*49,(aa//50)*50,city_name))
+    # # threads.append(x49)
+    # # x49.start()
+
+
+    # # x50 = threading.Thread(target=zomato, args=((aa//50)*50,aa+1,city_name))
+    # # threads.append(x50)
+    # # x50.start()
 
 
     x.join()
@@ -2310,6 +2333,9 @@ for c in left_join['index']:
         cuisine_del.append(left_join['index'][c])
     
 left_join = left_join.drop(cuisine_del)
+drop_dup=left_join[left_join.duplicated(['url'])]
+left_join=left_join.drop(list(drop_dup.index))
+
 
 left_join.to_csv('test111.csv' , mode = 'w+')
 #print(left_join[(left_join.reviews == 569)])
