@@ -122,18 +122,14 @@ def final_page(start,stop,city_name2):
             agent = {"User-Agent":'Chrome/77.0.3865.90'}
             page = requests.get(url, headers=agent)
             soup=BeautifulSoup(page.content, 'lxml')
-                    
+            for_page=soup.find_all("div",{'class':'card search-snippet-card search-card'})
+
             try:
-                
-                test = soup.find("div",{"class":"ui cards"})
-                
-                
-                t=collections.Counter(test.getText().split())
-    
-                if t['NEW'] + t['-'] >= 15:
+                if "flex align-center both-rating" not in str(for_page) and "single-rating flex" not in str(for_page):
+                    
                     aa2.append(i)
-                    break
-            except:
+                    break                
+            except :
                 print("pass")
                     
 
@@ -292,6 +288,7 @@ else:
 
     aa2 = sorted(aa2)
     aa_final = aa2[0]
+    print(aa_final)
 
 
 
@@ -497,48 +494,24 @@ else:
 
 
 
-
-      
 def zomato(start,stop,city_name):
-
-
-
     
-
-
     
-    dataframe = []
-    dd=[]
-    cuisines=[]
-    for j in range(start,stop):
-        print(aa_final)
-        if(city_name == "delhi"):
-            
-            city_name = "ncr"
-            url = "https://www.zomato.com/"+city_name+"/restaurants?sort=best&page="+str(j)
-
-            print(city_name)
-        if( city_name == "gurgaon" or city_name == "noida" or city_name == "faridabad" or city_name == "ghaziabad" ):
-            url = "https://www.zomato.com/ncr/restaurants/"+city_name+"?sort=best&page="+str(j)
-            print(url)
-        if( city_name == "bangalore" or city_name == "banglore"):
-            url = "https://www.zomato.com/bengaluru/restaurants/?sort=best&page="+str(j)
-            print(url)
-
-        else:
-            url = "https://www.zomato.com/"+city_name+"/restaurants?sort=best&page="+str(j)
-            print(url + "   " +"Thread = "+threading.currentThread().getName())
-            
+    for jj in range(start,stop):
+        
+        url = "https://www.zomato.com/"+city_name+"/restaurants?sort=best&page="+str(jj)
+        total=[]
         agent = {"User-Agent":'Chrome/77.0.3865.90'}
         page = requests.get(url, headers=agent)
         soup=BeautifulSoup(page.content, 'lxml')
         
-        length=len(soup.find_all("a",{'class':'result-title hover_feedback zred bold ln24 fontsize0'}))
+        length=len(soup.find_all("div",{'class':'card search-snippet-card search-card'}))
+        all_res=soup.find_all("div",{'class':'card search-snippet-card search-card'})
         soup2=soup.find_all("a",{'class':'result-title hover_feedback zred bold ln24 fontsize0'})
-        ratings_len = len(soup.find_all("div",{"class":"ta-right floating search_result_rating col-s-4 clearfix"}))
-        ratings = soup.find_all("div",{"class":"ta-right floating search_result_rating col-s-4 clearfix"})
+        ratings_len = len(soup.find_all("div",{"class":"flex align-center both-rating"}))
+        ratings_both = soup.find_all("div",{"class":"flex align-center both-rating"})
         cost_for_2 = soup.find_all("span",{"class":"col-s-11 col-m-12 pl0"})
-        
+        ratings_color = soup.find_all("div",{"class":"single-rating flex"})
         
         cuisines = soup.find_all("span",{"class":"col-s-11 col-m-12 nowrap pl0"})
         address = soup.find_all("div",{"class":"col-m-16 search-result-address grey-text nowrap ln22"})
@@ -547,12 +520,16 @@ def zomato(start,stop,city_name):
         #print(lat['content'])
         #print(lon['content'])
         
+        
+        
+        
         parent = soup.find_all("div",{"class":"card search-snippet-card search-card"})
         
         
         
         
         for i in range(len(parent)):
+            
             final_url.append(parent[i].find("a",{'class':'result-title hover_feedback zred bold ln24 fontsize0'})['href'])
             if parent[i].find("a",{"class":"ui ta-right pt10 fontsize3 zred pb10 pr10"}):
                 
@@ -562,7 +539,7 @@ def zomato(start,stop,city_name):
                 if len(parent[i].find_all("a",{"class":"ui col-l-16 search_chain_bottom_snippet"})) == 1:
                     
                     
-
+        
                     url_less_than_2.append(parent[i].find_all("a",{"class":"ui col-l-16 search_chain_bottom_snippet"})[0]['href'])
                     
                 if len(parent[i].find_all("a",{"class":"ui col-l-16 search_chain_bottom_snippet"})) == 2:
@@ -571,62 +548,172 @@ def zomato(start,stop,city_name):
                     url_less_than_2.append(parent[i].find_all("a",{"class":"ui col-l-16 search_chain_bottom_snippet"})[1]['href'])
         
         
-                
-            
+        
+        
+                    
             
         
             
-        for tt in range(ratings_len):
-
-            #if  list(ratings[tt].getText().split())[0] != "NEW":
+        for tt in range(length):
                 
-                #print(list(ratings[tt].getText().split())[0])
-            
-
                 d['name'] = soup2[tt]['title']
                 d['link'] = soup2[tt]['href']
                 
+                try:
+                    
+                    if all_res[tt].find("div",{"class":"flex align-center both-rating"}) != None:
+                        both = all_res[tt].find("div",{"class":"flex align-center both-rating"})
+                        total_rat_rev=[i for i in re.split("[|() \n]",both.getText()) if i]
+                        total.append(total_rat_rev)                
+                        if ',' in  total_rat_rev[1]:
+                            total_rat_rev[1]=total_rat_rev[1].replace(',','')
+                        if ',' in  total_rat_rev[3]:    
+                            total_rat_rev[3] = total_rat_rev[3].replace(',','')
+                        if 'K' in  total_rat_rev[1]:
+                            total_rat_rev[1]=total_rat_rev[1].replace('.','').strip().replace('K','00')
+                        if 'K' in  total_rat_rev[3]:
+                            total_rat_rev[3]=total_rat_rev[3].replace('.','').strip().replace('K','00')
+                        if 'K' in  total_rat_rev[1]:
+                            total_rat_rev[1]=total_rat_rev[1].replace('K','000').strip()
+                        if 'K' in  total_rat_rev[3]:
+                            total_rat_rev[3]=total_rat_rev[3].replace('K','000').strip()
+                
+                
+                        
+                        
+                        
+                        d['ratings'] = (float(total_rat_rev[0]) + float(total_rat_rev[2]))/2
+                        d['ratings_dining'] = total_rat_rev[0]
+                        d['ratings_delivery'] = total_rat_rev[2]
+                        d['reviews_dining'] = total_rat_rev[1]
+                        d['reviews_delivery'] = total_rat_rev[3]
+                        d['reviews'] = (int(total_rat_rev[1]) + int(total_rat_rev[3]))//2
+                
+                            
+                    elif all_res[tt].find("div",{"class":"flex align-center both-rating"}) == None:
+                    
+                        single = all_res[tt].find("div",{"class":"single-rating flex"})
+                    
+                        if '#1C1C1C' in str(single):
+                            
+                            dining = single
+                            
+                            for_k=dining.find("span",{"class":"review-count medium"}).getText()
+                            k_var=re.sub('[Reviews()]','',dining.find("span",{"class":"review-count medium"}).getText()).strip()
+                            if 'K' in k_var:
+                                k_var= k_var.replace('.','').strip().replace('K','00').strip()
+                                d['reviews_dining'] = k_var
+                                d['reviews'] = k_var
+                                d['reviews_delivery'] =''
+                            
+                                
+                            else:
+                                rev_dining = ''.join(re.findall('\d+',dining.find("span",{"class":"review-count medium"}).getText()))
+                                d['reviews_dining'] = rev_dining
+                                d['reviews'] = rev_dining
+                                d['reviews_delivery'] =''
+                             
+                                
+                        
+                        
+                            rat_dining=''.join(re.findall('\d.+',dining.find("span",{"class":"rating-value"}).getText()))
+                            d['ratings_dining']= rat_dining
+                            d['ratings'] = rat_dining
+                            d['ratings_delivery'] = ''
+                            
+                            
+                            
+                    
+                            
+                                
+                        
+                        elif '#E23744' in str(single):
+                            
+                            delivery = single
+                            
+                        
+                            
+                    
+                            for_k=ratings_color[1].find("span",{"class":"review-count medium"}).getText()
+                            k_var=re.sub('[Reviews()]','',delivery.find("span",{"class":"review-count medium"}).getText()).strip()
+                            if 'K' in k_var:
+                            
+                                k_var= k_var.replace('.','').strip().replace('K','00').strip()
+                                d['reviews_delivery'] = k_var
+                                d['reviews'] = k_var
+                                d['reviews_dining']=''
+                                
+                                
+                            
+                            else:
+                                
+                                rev_delivery=''.join(re.findall('\d+',delivery.find("span",{"class":"review-count medium"}).getText()))
+                
+                                d['reviews_delivery'] = rev_delivery
+                                d['reviews'] = rev_delivery
+                                d['reviews_dining']=''
+                                
+                                
+                                
+                            
+                        
+                            
+                        
+                            rat_delivery=''.join(re.findall('\d.+',delivery.find("span",{"class":"rating-value"}).getText()))
+                            d['ratings_delivery']=rat_delivery
+                            d['ratings'] = rat_delivery
+                            d['ratings_dining']=''
+
+                            
+                        
+                            
+                        else:
+                            d['ratings']=''
+                            d['ratings_delivery']=''
+                            d['ratings_dining']=''
+                            d['reviews']=''
+                            d['reviews_delivery']=''
+                            d['reviews_dining']=''
+                        
+                    
+                
+                except:
+                    
+                    d['ratings']=''
+                    d['ratings_delivery']=''
+                    d['ratings_dining']=''
+                    d['reviews']=''
+                    d['reviews_delivery']=''
+                    d['reviews_dining']=''
                 
                 try:
                     if not cost_for_2:
-                        print("ooppp")
+                        
                         d['cost for 2'] = ""
                     else:
                         d['cost for 2'] = cost_for_2[tt].getText()[1:]
                 except IndexError  :
-
+        
                     d['cost for 2'] = ""
-                    print("aaaaaa")
-
+                    
+        
                 try:
-
+        
                     d['cuisines'] = cuisines[tt].getText()
                 except:
                     d['cuisines'] = ""
-
+        
                 try:
-
-                    d['ratings'] = (list(ratings[tt].getText().split())[0])
-                except:
-
-                    d['ratings'] = ""
-                try:
-                    d['reviews'] = (list(ratings[tt].getText().split())[1])
-                except:
-                    d['reviews'] = ""
-
-
-
-                try:
-
+        
                     d['address'] = address[tt].getText()
                 except:
                     d['address'] = ""
 
 
 
+
 def more_than_2(start,stop):
-    print("more")
+    
     
            
     
@@ -659,7 +746,7 @@ def more_than_2(start,stop):
        
                 
 def zomato_child(url_param,start,stop):
-    print("thread11")
+    
         
     for j in range(start,stop):
 
@@ -793,47 +880,56 @@ def lat_lon(start,stop):
         soup_loop=BeautifulSoup(page.content, 'lxml')
         
         try:
+            cost_all=soup_loop.find_all("h5")
+            if  'Top Dishes' in str(cost_all) and 'Average' in str(cost_all):
+        
+                for cst in range(len(cost_all)):
             
-            cost_all = soup_loop.findAll("p",{"color":"#4F4F4F"})
-            if cost_all:
+                    if 'Top Dishes' in cost_all[cst].getText():
+                        
+                        test['fav']=cost_all[cst].findNext("p").getText()
+                        
                 
+                        
+                        
+                    
+                    if 'Average' in cost_all[cst].getText():
+                        
+                        cost_for_2=cost_all[cst].findNext("p").getText()
+                        # d['cost for 2']=''.join(re.findall(r'\d+', cost_for_2))
+                        
+                        
+                        
+            elif cost_all and  'Average' in str(cost_all):
                 for cst in range(len(cost_all)):
                     
-                    if '₹' in cost_all[cst].getText() and 'pint' not in cost_all[cst].getText():
+                    if 'Average' in cost_all[cst].getText():
                         
+                        cost_for_2=cost_all[cst].findNext("p").getText()
                         
+                        # test['cost for 2']=''.join(re.findall(r'\d+', cost_for_2))
+                        test['fav'] =''
                         
-                        cost_for_two = cost_all[cst].getText()
+            
+            
+            
+            elif cost_all and  'Top Dishes' in str(cost_all):
+                for cst in range(len(cost_all)):
+                    
+                    
+                    if 'Top Dishes' in cost_all[cst].getText():
                         
+                        test['fav']=cost_all[cst].findNext("p").getText()
                         
-                        cost_for_two = ''.join(re.findall(r'\d+', cost_for_two))
-                        
-                        
-                else:
-                    fav =cost_all[0].getText()
-                    if fav == cost_for_two:
-                        if 'approx' in fav:
-                            
-                            test['fav'] = ''
-                    else:
-                        test['fav'] = fav
+                        # test['cost for 2'] = ''
             else:
-                d['cost for 2'] = ''
-                test['fav'] = ''
-                    
-                    
-                
-                
-                
-            
-            
+                #test['cost for 2'] = ''
+                test['fav'] =''
                 
         except:
-            d['cost for 2'] = '' 
+            # d['cost for 2'] = '' 
             test['fav'] = ''
-        
-        
-        
+   
         try:
             
             loc = soup_loop.find_all("script",{"data-rh":"true"})
@@ -856,19 +952,6 @@ def lat_lon(start,stop):
         
 
         test['url'] = str(url)
-        
-        # try:
-        #     fav =soup_loop.find("div",{"class" : "fontsize13 ln18"})
-        #     fav_loop = fav.find_all("span")
-        
-
-        #     for i in fav_loop:
-
-        #         test1=str(test1+","+i.getText().strip("\n ,")).lstrip(",").lower()
-        #     test['fav'] = test1
-            
-        # except:
-        #     test['fav'] = ""
 
 
 
@@ -1196,7 +1279,7 @@ else:
 def fetch_less_than_2(start,stop,unique_list):
     
     for u in range(start,stop):
-        print("fetch")
+        
         
     
         temp_str=[]
@@ -1249,72 +1332,163 @@ def fetch_less_than_2(start,stop,unique_list):
         
         
         try:
-            ratings = name_ui.find("article")
-            if ratings:
-                
-                d['ratings'] = ratings.getText()
-            else:
-                d['ratings'] = ''
-            #print(ratings.getText())    
-        except:
-            ratings=''
-            d['ratings'] = ratings
-            #print(ratings)
-        try:
-            reviews = ratings.findNextSibling()
-            if reviews:
-                
-                d['reviews'] = reviews.getText()
-            else:
-                d['reviews'] = ''
-            #print(reviews.getText())
-        except:
-            reviews = ''
-            d['reviews'] = reviews
-            #print(reviews)
-        #print(url_ui)
             
-        
-        
-        try:
+            all_rev = soup_ui.find_all("p",{"class":re.compile("sc-1hez2tp-0 lhdg1m-7.*")})
+            all_rat = soup_ui.find_all("section",{"class":re.compile("lhdg1m-0 eVTFyk.*")})
             
-            cost_all = name_ui.findAll("p",{"color":"#4F4F4F"})
-            if not cost_all:
-                d['cost for 2'] = ''
-                print("oooaaaa")
-            else:
+            if len(all_rev) == 2:
+                dining = ''.join(re.findall('[\d K]',all_rev[0].getText())).strip()
+                delivery= ''.join(re.findall('[\d K]',all_rev[1].getText())).strip()
+                if ',' in  dining:
+                        dining=dining.replace(',','')
+                if 'K' in  dining:
+                    dining=dining.replace('.','').strip().replace('K','00')
+                if 'K' in  dining:
+                    dining=dining.replace('K','000').strip()
+                if ',' in  delivery:
+                        delivery=delivery.replace(',','')
+                if 'K' in  delivery:
+                    delivery=delivery.replace('.','').strip().replace('K','00')
+                if 'K' in  delivery:
+                    delivery=delivery.replace('K','000').strip()
                 
-                for cst in range(len(cost_all)):
+                
+                if len(dining) >=1 and len(delivery) >=1:
                     
-                    if '₹' in cost_all[cst].getText() and 'pint' not in cost_all[cst].getText():
-                        
-                        
-                        
-                        cost_for_two = cost_all[cst].getText()
-                        
-                        
-                        cost_for_two = ''.join(re.findall(r'\d+', cost_for_two))
-                        d['cost for 2'] = cost_for_two
-                  
+                    d['reviews'] = (int(dining) + int(delivery))//2
+                    d['reviews_dining']=int(dining)
+                    d['reviews_delivery']=int(delivery)
+                elif len(dining) >=1:
+                    
+                    d['reviews'] = int(dining)
+                    d['reviews_dining']=int(dining)
+                    d['reviews_delivery']=''
+                elif len(delivery) >=1:
+                    
+                    d['reviews'] = int(delivery)
+                    d['reviews_dining']=''
+                    d['reviews_delivery']=int(delivery)
                 else:
-                    fav =cost_all[0].getText()
-                    if fav == cost_for_two:
-                        test['fav'] = ''
-                    else:
-                        test['fav'] = fav
-            
-            
-                        
+                    
+                    d['reviews']=''
+                    d['reviews_delivery']=''
+                    d['reviews_dining']=''
+            else:
+                d['reviews']=''
+                d['reviews_delivery']=''
+                d['reviews_dining']=''
+                
+                    
+                
+            if len(all_rat) == 2:
+                
+                dining_rat = ''.join(re.findall('[\d .]',all_rat[0]['value']))
+                delivery_rat=''.join(re.findall('[\d .]',all_rat[1]['value']))
+                
+                
+                
+                
+                if len(dining_rat) >=1 and len(delivery_rat) >=1:
+                    
+                    
+                    
+                    d['ratings'] = (float(dining_rat)+ float(delivery_rat))/2
+                    d['ratings_delivery']= delivery_rat
+                    d['ratings_dining'] = dining_rat
+                elif len(dining_rat) >=1:
+                    
+                    d['ratings'] = float(dining_rat)
+                    d['ratings_delivery'] = ''
+                    d['ratings_dining'] = float(dining_rat)
+                elif len(delivery_rat) >=1:
+                    
+                    d['ratings'] = float(delivery_rat)
+                    d['ratings_delivery']=float(delivery_rat)
+                    d['ratings_dining']=''
+                    
+                else:
+                    
+                    d['ratings']=''
+                    d['ratings_delivery']=''
+                    d['ratings_dining']=''
+                    
+            else:
+                d['ratings']=''
+                d['ratings_delivery']=''
+                d['ratings_dining']=''
+                
+                
+                
                 
                 
                 
             
             
-                
         except :
             
+            d['ratings']=''
+            d['reviews']=''
+            d['ratings_delivery']=''
+            d['ratings_dining']=''
+            d['reviews_delivery']=''
+            d['reviews_dining']=''
+            
+            
+        try:
+            cost_all=soup_ui.find_all("h5")
+            if  'Top Dishes' in str(cost_all) and 'Average' in str(cost_all):
+        
+                for cst in range(len(cost_all)):
+            
+                    if 'Top Dishes' in cost_all[cst].getText():
+                    
+                        test['fav']=cost_all[cst].findNext("p").getText()
+                        
+                
+                        
+                        
+                    
+                    if 'Average' in cost_all[cst].getText():
+                
+                        cost_for_2=cost_all[cst].findNext("p").getText()
+                        d['cost for 2']=''.join(re.findall(r'\d+', cost_for_2))
+                        # test['cost for 2']=''.join(re.findall(r'\d+', cost_for_2))
+                        
+                        
+            elif cost_all and  'Average' in str(cost_all):
+                for cst in range(len(cost_all)):
+                    
+                    if 'Average' in cost_all[cst].getText():
+                        
+                        cost_for_2=cost_all[cst].findNext("p").getText()
+                        d['cost for 2']=''.join(re.findall(r'\d+', cost_for_2))
+                        # test['cost for 2']=''.join(re.findall(r'\d+', cost_for_2))
+                        test['fav'] =''
+                        
+            
+            
+            
+            elif cost_all and  'Top Dishes' in str(cost_all):
+                for cst in range(len(cost_all)):
+                    
+                    
+                    if 'Top Dishes' in cost_all[cst].getText():
+                    
+                        test['fav']=cost_all[cst].findNext("p").getText()
+                        # test['cost for 2'] = ''
+                        d['cost for 2'] = ''
+                    
+            else:
+                # test['cost for 2'] = ''
+                test['fav'] =''
+                d['cost for 2']=''
+                
+        except:
+            d['cost for 2'] = '' 
+            # test['cost for 2']=''
             test['fav'] = ''
-            print("dsfsdgfsg")
+
+        
             
             
             
@@ -1951,7 +2125,7 @@ else:
         
         
     test_df_list = pd.DataFrame(d)
-    print(test_df_list.head())  
+    
     test_df_list.to_csv(city_name+'.csv',index=False)
     
     
@@ -2061,7 +2235,7 @@ for ii in left_join['index']:
         
         
         left_join['cost for 2'][ii] =  str(left_join['cost for 2'][ii]).replace(',','')
-        print(left_join['cost for 2'][ii])
+        
         if  not str(left_join['cost for 2'][ii]).isdigit():
             left_join['cost for 2'].loc[ii] = ''
 
@@ -2075,7 +2249,7 @@ for i in left_join.columns:
 
       
 
-query_lat_lon = left_join.query('lat == "0.0" | lat == "nan" | lon == "0.0" | lat == " " | lon == " "  | lon=="nan"')
+query_lat_lon = left_join.query('lat == "0.0" | lat == "nan" | lon == "0.0" | lat == "" | lon == ""  | lon=="nan"')
 
 left_join=left_join.drop(query_lat_lon.index)
 
@@ -2091,7 +2265,6 @@ left_join=left_join.drop(query.index)
 left_join['reviews'] = left_join['reviews'].astype(str).astype(int)
 left_join['ratings'] = left_join['ratings'].astype(str).astype(float)
 
-print(left_join.dtypes)
 
 if len(inp_rev) > 0:
     
