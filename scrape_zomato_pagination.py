@@ -1143,7 +1143,7 @@ if os.path.exists(city_name+'.csv') == True:
             panda_dict['cuisines'] = str(retrieve['cuisines'][l])
             
             
-        test_df_list = pd.DataFrame(panda_dict)
+        
 else:
     print('more than two else')
     length_more = len(url_more_than_2)
@@ -2244,7 +2244,7 @@ for ii in left_join['index']:
             
 
 for i in range(len(left_join)):
-    if 'approx' in str(left_join['fav'].iloc[i]):
+    if 'approx'  in str(left_join['fav'].iloc[i]) or  'nan' in str(left_join['fav'].iloc[i]):
         left_join['fav'].iloc[i] = ''            
 
 
@@ -2272,14 +2272,14 @@ for i in left_join.columns:
 
       
 
-query_lat_lon = left_join.query('lat == "0.0" | lat == "nan" | lon == "0.0" | lat == "" | lon == ""  | lon=="nan"')
+query_lat_lon = left_join.query('lat == "0.0" | lat == "nan" | lon == "0.0" | lat == "" | lon == ""  | lon=="nan" ')
 
 left_join=left_join.drop(query_lat_lon.index)
 
 left_join['lat'] = left_join['lat'].astype(str).astype(float)
 left_join['lon'] = left_join['lon'].astype(str).astype(float)
 
-query = left_join.query('ratings=="" | ratings=="-" | reviews=="" | ratings=="NEW" | reviews=="nan" | ratings=="Opening" | ratings=="Closed" | ratings=="Soon" | ratings=="Temporarily"  | lat >= 90 | lat <= -90 | `cost for 2` == "" |fav=="nan" ')
+query = left_join.query('ratings=="" | ratings=="-" | reviews=="" | ratings=="NEW" | reviews=="nan" | ratings=="Opening" | ratings=="Closed" | ratings=="Soon" | ratings=="Temporarily"  | lat >= 90 | lat <= -90 | `cost for 2` == ""  ')
 
 
 
