@@ -2336,10 +2336,13 @@ left_join = left_join.drop(cuisine_del)
 drop_dup=left_join[left_join.duplicated(['url'])]
 left_join=left_join.drop(list(drop_dup.index))
 
+left_join = left_join.drop(['index','key_0','url'],axis=1)
+left_join.set_index('name', inplace=True)
 
-left_join.to_csv('test111.csv' , mode = 'w+')
+left_join.to_csv(city_name+'_final_clean.csv' , mode = 'w+')
 #print(left_join[(left_join.reviews == 569)])
+left_join.index
 
-suggest('test111.csv',city_name=city_name)
+suggest(city_name+'_final_clean.csv',city_name=city_name)
 
 print("--- %s seconds ---" % (time.time() - start_time))
