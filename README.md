@@ -1,4 +1,4 @@
-This visualization project shows the areas or localities in which you can open a restaurant based on the data from previous restaurants.
+This project shows the areas or localities in which you can open a restaurant based on the data from previous restaurants.
 
 To run the project :
 
